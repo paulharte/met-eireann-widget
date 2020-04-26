@@ -1,52 +1,54 @@
 package com.harte.meteireannwidget.met;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class ForecastService {
+public class MetService {
+
+    MetApi api;
 
     @Inject
-    public ForecastService(){}
-
-    private MetApi getApi() {
+    public MetService(){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        // set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        // add your other interceptors …
+        // add logging as last interceptor
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://prodapi.metweb.ie/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(httpClient.build())
                 .build();
 
         // create an instance of the ApiService
-        return retrofit.create(MetApi.class);
+        this.api = retrofit.create(MetApi.class);
     }
 
-    public ArrayList<MetForecast> getMetForecast(double longitude, double latutude) throws OutsideForecastException {
+    private MetApi getApi() {
+        return this.api;
+    }
+
+    public Observable<ArrayList<MetForecast>> getMetForecast(double longitude, double latutude) throws OutsideForecastException {
         this.validateCoOrdinates(longitude, latutude);
 
         // make a request by calling the corresponding method
 
-        Call call = getApi().getDailyForecast(this.convertCoOrdToString(longitude), this.convertCoOrdToString(latutude));
-        try {
-            return (ArrayList<MetForecast>) call.execute().body();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return getApi().getDailyForecast(this.convertCoOrdToString(longitude), this.convertCoOrdToString(latutude));
     }
 
-    public CurrentObservation getShortForecast(County county)  {
-
-            Call call = getApi().getCurrentObservance(county);
-        try {
-            return (CurrentObservation) call.execute().body();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+    public Observable<CurrentObservation> getShortForecast(County county)  {
+        return getApi().getCurrentObservance(county);
     }
 
     private void validateCoOrdinates(double longitude, double latitude) throws OutsideForecastException {

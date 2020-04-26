@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MetEireannWidget</string>
+    <string name="appwidget_text">EXAMPLE_</string>
+    <string name="currentWeatherDesc">*</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 </resources>

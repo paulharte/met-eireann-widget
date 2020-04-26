@@ -3,7 +3,7 @@ package com.harte.meteireannwidget.met;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ShortForecast {
+public class CurrentObservation {
 
     @SerializedName("temperature")
     @Expose

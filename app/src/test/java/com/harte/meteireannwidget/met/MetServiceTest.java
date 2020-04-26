@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ForecastServiceTest {
+public class MetServiceTest {
 
     @Test
     public void getMetForecast() {
@@ -12,9 +12,5 @@ public class ForecastServiceTest {
 
     @Test
     public void getShortForecast() {
-        ForecastService service = new ForecastService();
-        CurrentObservation shortf = service.getShortForecast(County.Dublin);
-        System.out.print(shortf);
-        assertNotNull(shortf);
     }
 }
