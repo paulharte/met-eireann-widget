@@ -1,17 +1,21 @@
 package com.harte.meteireannwidget.widget;
 
+import com.harte.meteireannwidget.met.County;
+
 public class CurrentWeather {
 
     int symbol;
     String description;
     Temperature temperature;
     Wind wind;
+    County county;
 
-    public CurrentWeather( int symbol, String description, Temperature temperature, Wind wind) {
+    public CurrentWeather( int symbol, String description, Temperature temperature, Wind wind, County county) {
         this.symbol = symbol;
         this.description = description;
         this.temperature = temperature;
         this.wind = wind;
+        this.county = county;
     }
 
     public int getSymbol() {

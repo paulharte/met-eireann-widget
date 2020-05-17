@@ -8,6 +8,7 @@ import android.widget.RemoteViews;
 import com.harte.meteireannwidget.DaggerForecastComponent;
 import com.harte.meteireannwidget.ForecastComponent;
 import com.harte.meteireannwidget.R;
+import com.harte.meteireannwidget.location.CountyService;
 import com.harte.meteireannwidget.met.*;
 
 import rx.Subscriber;
@@ -18,9 +19,9 @@ import rx.schedulers.Schedulers;
  */
 public class TodaysWeatherWidget extends AppWidgetProvider {
 
-    private static final String TAG = "MyActivity";
-
-    ForecastComponent forecastComponent;
+    private static final String TAG = "TodaysWeatherWidget";
+    private ForecastComponent forecastComponent;
+    private County currentCounty;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, CurrentWeather weather) {
@@ -43,34 +44,46 @@ public class TodaysWeatherWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+
+        //TODO:  move these to create time
         this.forecastComponent = DaggerForecastComponent.create();
+        CountyService countyService = new CountyService(context);
+        this.currentCounty = countyService.getCurrentCounty();
 
-        ForecastService forc = this.forecastComponent.getForecastService();
-        forc.getCurrentWeather(County.Dublin)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<CurrentWeather>() {
-                               @Override
-                               public void onCompleted() {
-                                   Log.d(TAG, "[onCompleted] ");
-                               }
+        if (this.currentCounty != null) {
+            ForecastService forc = this.forecastComponent.getForecastService();
+            forc.getCurrentWeather(this.currentCounty)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe(new Subscriber<CurrentWeather>() {
+                                   @Override
+                                   public void onCompleted() {
+                                       Log.d(TAG, "[onCompleted] ");
+                                   }
 
-                               @Override
-                               public void onError(Throwable t) {
-                                   Log.d(TAG, "[onError] ");
-                                   t.printStackTrace();
-                               }
+                                   @Override
+                                   public void onError(Throwable t) {
+                                       Log.d(TAG, "[onError] ");
+                                       t.printStackTrace();
+                                   }
 
-                               @Override
-                               public void onNext(CurrentWeather weather) {
-                                   Log.d(TAG, "[onNext] " + weather.toString());
-                                   for (int appWidgetId : appWidgetIds) {
-                                       updateAppWidget(context, appWidgetManager, appWidgetId, weather);
+                                   @Override
+                                   public void onNext(CurrentWeather weather) {
+                                       Log.d(TAG, "[onNext] " + weather.toString());
+                                       for (int appWidgetId : appWidgetIds) {
+                                           updateAppWidget(context, appWidgetManager, appWidgetId, weather);
+                                       }
                                    }
                                }
-                           }
-                );
+                    );
+        }
 
+
+    }
+
+    public void updateAllWidgets(Context context, CurrentWeather weather) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] ids = appWidgetManager.getAppWidgetIds(this)
     }
 
 
