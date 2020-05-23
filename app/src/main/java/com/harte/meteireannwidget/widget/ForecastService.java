@@ -6,6 +6,10 @@ import com.harte.meteireannwidget.imageFetch.ImageFetcher;
 import com.harte.meteireannwidget.met.County;
 import com.harte.meteireannwidget.met.CurrentObservation;
 import com.harte.meteireannwidget.met.MetService;
+import com.harte.meteireannwidget.weather.CurrentWeather;
+import com.harte.meteireannwidget.weather.Temperature;
+import com.harte.meteireannwidget.weather.Wind;
+
 import rx.Observable;
 
 import javax.inject.Inject;
@@ -21,12 +25,11 @@ public class ForecastService {
         this.imgFetch = imgFetch;
     }
 
-
     public Observable<CurrentWeather> getCurrentWeather(County county) {
-        return this.metService.getShortForecast(county).map(obs -> this.mapMetObservanceToWeather(obs));
+        return this.metService.getShortForecast(county).map(obs -> this.mapMetObservanceToWeather(obs, county));
     }
 
-    private CurrentWeather mapMetObservanceToWeather(CurrentObservation obs) {
+    private CurrentWeather mapMetObservanceToWeather(CurrentObservation obs, County county) {
         Log.i("ForecastService", obs.toString());
         Log.i("ForecastService", obs.getSymbol());
         Log.i("ForecastServiceDesc", obs.getWeatherDescription());
@@ -36,7 +39,8 @@ public class ForecastService {
         return new CurrentWeather(weatherSymbol,
                 obs.getWeatherDescription(),
                 this.getTempFromObservance(obs),
-                this.getWindFromObservance(obs));
+                this.getWindFromObservance(obs),
+                county);
     }
 
 

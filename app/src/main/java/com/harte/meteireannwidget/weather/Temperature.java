@@ -1,9 +1,8 @@
-package com.harte.meteireannwidget.widget;
+package com.harte.meteireannwidget.weather;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
-class Temperature extends WeatherObject{
+public class Temperature extends WeatherObject {
 
     private BigDecimal celsius;
 

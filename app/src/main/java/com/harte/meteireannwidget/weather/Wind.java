@@ -1,8 +1,8 @@
-package com.harte.meteireannwidget.widget;
+package com.harte.meteireannwidget.weather;
 
 import java.math.BigDecimal;
 
-class Wind extends WeatherObject {
+public class Wind extends WeatherObject {
 
     private BigDecimal windSpeedKm;
     private String windDescription;

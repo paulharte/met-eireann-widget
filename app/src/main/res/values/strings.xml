@@ -4,4 +4,5 @@
     <string name="currentWeatherDesc">*</string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
+    <string name="update">Update</string>
 </resources>

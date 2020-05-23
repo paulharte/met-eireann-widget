@@ -4,7 +4,7 @@
                     android:minHeight="40dp"
                     android:minResizeWidth="40dp"
                     android:minResizeHeight= "40dp"
-                    android:updatePeriodMillis="60000"
+                    android:updatePeriodMillis="30000"
                     android:previewImage="@drawable/example_appwidget_preview"
                     android:initialLayout="@layout/todays_weather_widget"
                     android:resizeMode="horizontal|vertical"

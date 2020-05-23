@@ -5,19 +5,22 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.util.Log;
 import android.widget.RemoteViews;
-import com.harte.meteireannwidget.DaggerForecastComponent;
+
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
+import com.harte.meteireannwidget.ForecastActivity;
 import com.harte.meteireannwidget.ForecastComponent;
 import com.harte.meteireannwidget.R;
-import com.harte.meteireannwidget.location.CountyService;
 import com.harte.meteireannwidget.met.*;
+import com.harte.meteireannwidget.permissions.RequestPermissions;
+import com.harte.meteireannwidget.weather.CurrentWeather;
 
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
 
 /**
  * Implementation of App Widget functionality.
  */
-public class TodaysWeatherWidget extends AppWidgetProvider {
+public class WeatherWidget extends AppWidgetProvider {
 
     private static final String TAG = "TodaysWeatherWidget";
     private ForecastComponent forecastComponent;
@@ -45,45 +48,14 @@ public class TodaysWeatherWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
 
-        //TODO:  move these to create time
-        this.forecastComponent = DaggerForecastComponent.create();
-        CountyService countyService = new CountyService(context);
-        this.currentCounty = countyService.getCurrentCounty();
+        // ...then create a OneTimeWorkRequest that uses those constraints
+        OneTimeWorkRequest updateWork =
+                new OneTimeWorkRequest.Builder(WidgetCurrentWeatherUpdater.class)
+                        //.setConstraints(WidgetCurrentWeatherUpdater.getScheduledJobConstraints())
+                        .build();
+        WorkManager.getInstance(context).enqueue(updateWork);
+        Log.i(TAG, "Weather update job enqueued");
 
-        if (this.currentCounty != null) {
-            ForecastService forc = this.forecastComponent.getForecastService();
-            forc.getCurrentWeather(this.currentCounty)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.newThread())
-                    .subscribe(new Subscriber<CurrentWeather>() {
-                                   @Override
-                                   public void onCompleted() {
-                                       Log.d(TAG, "[onCompleted] ");
-                                   }
-
-                                   @Override
-                                   public void onError(Throwable t) {
-                                       Log.d(TAG, "[onError] ");
-                                       t.printStackTrace();
-                                   }
-
-                                   @Override
-                                   public void onNext(CurrentWeather weather) {
-                                       Log.d(TAG, "[onNext] " + weather.toString());
-                                       for (int appWidgetId : appWidgetIds) {
-                                           updateAppWidget(context, appWidgetManager, appWidgetId, weather);
-                                       }
-                                   }
-                               }
-                    );
-        }
-
-
-    }
-
-    public void updateAllWidgets(Context context, CurrentWeather weather) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] ids = appWidgetManager.getAppWidgetIds(this)
     }
 
 

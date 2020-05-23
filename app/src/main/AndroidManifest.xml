@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.harte.meteireannwidget">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
             android:allowBackup="true"
@@ -17,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".widget.TodaysWeatherWidget">
+        <receiver android:name=".widget.WeatherWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -26,6 +29,7 @@
                     android:name="android.appwidget.provider"
                     android:resource="@xml/todays_weather_widget_info"/>
         </receiver>
+        <service android:name=".location.CountyService" android:exported="false"/>
 
     </application>
 

@@ -1,9 +1,9 @@
-package com.harte.meteireannwidget.widget;
+package com.harte.meteireannwidget.weather;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-public abstract class WeatherObject {
+abstract class WeatherObject {
 
     protected String formatForStr(BigDecimal amount, boolean includeDecimal) {
         if (includeDecimal) {

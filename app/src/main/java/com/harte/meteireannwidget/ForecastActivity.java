@@ -1,12 +1,23 @@
-package com.harte.meteireannwidget
+package com.harte.meteireannwidget;
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import androidx.appcompat.app.AppCompatActivity;
 
-class ForecastActivity : AppCompatActivity() {
+import com.harte.meteireannwidget.permissions.RequestPermissions;
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forecast)
+public class ForecastActivity extends AppCompatActivity {
+    private static final String TAG = "AppCompatActivity";
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_forecast);
+        RequestPermissions.requestPermissions(getApplicationContext(), this);
+    }
+
+    public void onClickUpdate(View view) {
+
+        Log.i(TAG, "update button clicked");
     }
 }

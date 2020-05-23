@@ -1,5 +1,7 @@
 package com.harte.meteireannwidget.widget;
 
+import com.harte.meteireannwidget.weather.Temperature;
+
 import org.junit.Test;
 
 import java.math.BigDecimal;

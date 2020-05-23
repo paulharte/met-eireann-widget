@@ -1,6 +1,8 @@
-package com.harte.meteireannwidget.widget;
+package com.harte.meteireannwidget.weather;
 
 import com.harte.meteireannwidget.met.County;
+import com.harte.meteireannwidget.weather.Temperature;
+import com.harte.meteireannwidget.weather.Wind;
 
 public class CurrentWeather {
 
