@@ -10,13 +10,12 @@ import androidx.work.Constraints;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.harte.meteireannwidget.DaggerForecastComponent;
+import com.harte.meteireannwidget.ForecastActivity;
 import com.harte.meteireannwidget.location.CountyService;
 import com.harte.meteireannwidget.met.County;
 import com.harte.meteireannwidget.weather.CurrentWeather;
 
 import java.util.concurrent.TimeUnit;
-
 
 public class WidgetCurrentWeatherUpdater extends Worker {
     private static final String TAG = "WidgetCurrWeatherUpdate";
@@ -28,7 +27,7 @@ public class WidgetCurrentWeatherUpdater extends Worker {
             @NonNull WorkerParameters params) {
         super(context, params);
         this.countyService = new CountyService(context);
-        this.forecastService = DaggerForecastComponent.create().getForecastService();
+        this.forecastService = ForecastActivity.getForecastComponent().getForecastService();
 
     }
     @NonNull

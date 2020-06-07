@@ -1,12 +1,22 @@
 package com.harte.meteireannwidget;
 
-import com.harte.meteireannwidget.widget.ForecastService;
-
-import javax.inject.Singleton;
+import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
 public class ForecastModule {
+
+    private Context context;
+
+    public ForecastModule(Context context) {
+        this.context = context;
+    }
+
+    @Provides
+    public Context getContext() {
+        return context;
+    }
+
 }

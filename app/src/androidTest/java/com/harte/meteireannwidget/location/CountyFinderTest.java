@@ -4,8 +4,8 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.harte.meteireannwidget.met.County;
 
@@ -14,14 +14,13 @@ import org.junit.runner.RunWith;
 
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class CountyFinderTest {
-
     @Test
     public void findKilkenny() throws Exception {
-        Context appContext = InstrumentationRegistry.getContext();
+        Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
         CountyFinder finder = new CountyFinder(Locale.ENGLISH, appContext);
 
         Location loc = new Location(LocationManager.NETWORK_PROVIDER);
@@ -35,7 +34,7 @@ public class CountyFinderTest {
 
     @Test
     public void findDublin() throws Exception {
-        Context appContext = InstrumentationRegistry.getContext();
+        Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
         CountyFinder finder = new CountyFinder(Locale.ENGLISH, appContext);
 
         Location loc = new Location(LocationManager.NETWORK_PROVIDER);

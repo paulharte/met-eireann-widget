@@ -1,7 +1,7 @@
 package com.harte.meteireannwidget
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +18,7 @@ class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
         // Context of the app under test.
-        val appContext = InstrumentationRegistry.getTargetContext()
+        val appContext = getInstrumentation().context
         assertEquals("com.harte.meteireannwidget", appContext.packageName)
     }
 }
