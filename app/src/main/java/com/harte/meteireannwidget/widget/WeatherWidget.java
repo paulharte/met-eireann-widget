@@ -1,20 +1,24 @@
 package com.harte.meteireannwidget.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-import com.harte.meteireannwidget.ForecastActivity;
 import com.harte.meteireannwidget.ForecastComponent;
 import com.harte.meteireannwidget.R;
 import com.harte.meteireannwidget.met.*;
-import com.harte.meteireannwidget.permissions.RequestPermissions;
+import com.harte.meteireannwidget.weather.Constants;
 import com.harte.meteireannwidget.weather.CurrentWeather;
+
+import java.util.Arrays;
 
 
 /**
@@ -34,14 +38,26 @@ public class WeatherWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.todays_weather_widget);
 
-        views.setImageViewResource(R.id.today_img, weather.getSymbol());
-        views.setTextViewText(R.id.appwidget_text, weather.getDescription());
-        views.setTextViewText(R.id.wind_text, weather.getWind().getWindSpeedKmStr(true));
+        updateCurrentWeatherDisplay( views,  weather);
+
+        // set up buttons
+        Intent intent = new Intent(context, WeatherWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] {appWidgetId});
+        PendingIntent pending = PendingIntent.getBroadcast(context, 1 , intent, PendingIntent.FLAG_ONE_SHOT);
+        views.setOnClickPendingIntent(R.id.update_button, pending);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
         Log.i(TAG, "successfully updated weather widget");
         Log.i(TAG, weather.toString());
+    }
+
+    static void updateCurrentWeatherDisplay(RemoteViews views, CurrentWeather weather) {
+        views.setImageViewResource(R.id.today_img, weather.getSymbol());
+        views.setTextViewText(R.id.current_weather_desc_text, weather.getDescription());
+        views.setTextViewText(R.id.wind_text, "Wind: " + weather.getWind().getWindSpeedKmStr(true) + Constants.DEGREES_C);
+        views.setTextViewText(R.id.temp_text, "Temp: " + weather.getWind().getWindSpeedKmStr(true) + Constants.KM_HR);
     }
 
     @Override
@@ -58,6 +74,11 @@ public class WeatherWidget extends AppWidgetProvider {
 
     }
 
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        // Use this to update widget when it is resized
+    }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
@@ -78,5 +99,7 @@ public class WeatherWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
+
 }
 
